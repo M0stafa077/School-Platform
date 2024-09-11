@@ -20,5 +20,4 @@ COPY . .
 EXPOSE 4000
 
 # Initialize the app and run the server
-RUN [ "npm", "run", "dev" ]
-# RUN [ "node", "build/index.js" ]
+CMD [ "npm", "run", "dev" ]
