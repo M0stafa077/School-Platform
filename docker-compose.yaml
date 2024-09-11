@@ -5,10 +5,10 @@ services:
     env_file:
       - ./.env
     environment:
-      - MYSQL_ROOT_PASSWORD=$MYSQL_MY_PASSWORD
-      - DATABASE=$MYSQL_DATABASE
+      - MYSQL_ROOT_PASSWORD=${MYSQL_MY_PASSWORD}
+      - DATABASE=${MYSQL_DATABASE}
     ports:
-      - $MYSQL_MAPPED_PORT:$MYSQL_LOCAL_PORT
+      - ${MYSQL_MAPPED_PORT}:${MYSQL_LOCAL_PORT}
     volumes:
       - db:/var/lib/mysql
   
@@ -21,13 +21,13 @@ services:
       - ./.env
     environment:
       - DB_HOST=database
-      - DB_USER=$MYSQL_MY_USER
-      - DB_PASSWORD=$MYSQL_MY_PASSWORD
-      - DB_NAME=$MYSQL_DATABASE
-      - DB_PORT=$MYSQL_LOCAL_PORT
-      - APP_PORT=$NODE_PORT
+      - DB_USER=${MYSQL_MY_USER}
+      - DB_PASSWORD=${MYSQL_MY_PASSWORD}
+      - DB_NAME=${MYSQL_DATABASE}
+      - DB_PORT=${MYSQL_LOCAL_PORT}
+      - APP_PORT=${NODE_PORT}
     ports:
-      - $NODE_PORT:$NODE_PORT
+      - ${NODE_PORT}:${NODE_PORT}
     volumes:
       - ./Back-end:/app
 
