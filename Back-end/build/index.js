@@ -4,21 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const database_1 = require("./database/database");
+const student_routes_1 = __importDefault(require("./Routes/student.routes"));
 const app = (0, express_1.default)();
 const port = process.env.APP_PORT || 4000;
-app.get('/', (req, res) => {
-    database_1.dbConnection.connect((err => {
-        if (err)
-            throw err;
-        database_1.dbConnection.query('USE School_db;', err => { if (err)
-            throw err; });
-    }));
+app.get('/', async (req, res) => {
     res.json({
-        myName: 'Mostafa Asaad',
-        age: "22"
+        project: 'Full-Stack, Long-Term Simple School Platform'
     });
 });
+app.use('/students', student_routes_1.default);
 app.listen(port, () => {
     console.log(`Listening on ${port}`);
 });
