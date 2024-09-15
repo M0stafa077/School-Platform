@@ -1,4 +1,4 @@
-type teacher = {
+export type teacher = {
     Name: string,
     phoneNumber: string,
     dateOfBirth: string,
