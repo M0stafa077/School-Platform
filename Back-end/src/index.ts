@@ -5,6 +5,7 @@ import studentRoutes  from './Routes/student.routes'
 
 const app:Application = express();
 const port = process.env.APP_PORT || 4000;
+app.use(express.json());
 
 app.get('/', async (req, res) => {
     res.json({
