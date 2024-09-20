@@ -27,11 +27,14 @@ const express_1 = require("express");
 const controllers = __importStar(require("../Controllers/student.controller"));
 const studentRoutes = (0, express_1.Router)();
 studentRoutes.get('/', controllers.getAllStudent);
-studentRoutes.get('/create');
-studentRoutes.post('/create');
+studentRoutes.route('/create')
+    .get(controllers.getCreateView)
+    .post(controllers.createNewStudent);
 studentRoutes.route('/:id')
     .get(controllers.getStudentById)
     .patch(controllers.updateStudentInfo);
-studentRoutes.get('/delete');
-studentRoutes.get('/delete/:id');
+studentRoutes.get('/delete-student', (req, res) => {
+    res.json({ message: "Delete a student" });
+});
+studentRoutes.delete('/delete-student/:id', controllers.deleteStudent);
 exports.default = studentRoutes;
