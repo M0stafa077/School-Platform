@@ -17,26 +17,44 @@ class StudentModel {
     }
     static async create(studentInfo) {
         return new Promise(async (resolve, reject) => {
-            const sqlCreateStudent = `insert into student (id, Nid, name, phone_number, department_id) values ('${studentInfo.id}', '${studentInfo.NID}', '${studentInfo.Name}', '${studentInfo.phoneNumber}', '1');`;
-            await database_1.dbConnection.connect();
-            database_1.dbConnection.query(sqlCreateStudent, (err, _res) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(true);
-            });
+            const sqlCreateStudent = `insert into student (id, Nid, name, phone_number, dateOfBirth, 
+            department_symbol)\
+            values ('${studentInfo.id}', '${studentInfo.NID}', '${studentInfo.Name}', \
+            '${studentInfo.phoneNumber}', '${studentInfo.dateOfBirth}', '${studentInfo.department}');`;
+            try {
+                await database_1.dbConnection.connect();
+                database_1.dbConnection.query(sqlCreateStudent, (err, _res) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    resolve(true);
+                });
+            }
+            catch (err) {
+                console.log("Error creating a new student record");
+                reject(err);
+            }
         });
     }
-    static async delete(studentInfo) {
+    static async delete(studentId) {
         return new Promise(async (resolve, reject) => {
-            const deleteQuery = `delete from student where id=${studentInfo.id}`;
+            const deleteQuery = `delete from student where id=${studentId}`;
             await database_1.dbConnection.connect();
-            database_1.dbConnection.query(deleteQuery, (err, _res) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(true);
-            });
+            try {
+                database_1.dbConnection.query(deleteQuery, (err, _res) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    if (_res.affectedRows == 0) {
+                        resolve(false);
+                    }
+                    resolve(true);
+                });
+            }
+            catch (err) {
+                console.log('Error deleting a student record\n' + err);
+                reject(err);
+            }
         });
     }
     static async getById(id) {
@@ -48,6 +66,7 @@ class StudentModel {
                     if (err) {
                         reject(err);
                     }
+                    database_1.dbConnection.end();
                     resolve(res);
                 });
             });
