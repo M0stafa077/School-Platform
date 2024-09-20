@@ -28,3 +28,38 @@ export const getStudentById = async(req: Request, res: Response) => {
 export const updateStudentInfo = async(req: Request, res: Response) => {
 
 };
+export const getCreateView = (req: Request, res: Response) => {
+    res.send('Create a new student');
+}
+export const createNewStudent = async(req: Request, res: Response) => {
+    let studentInfo: student = {} as student;
+    console.log(req.body);
+    studentInfo.id = req.body.id;
+    studentInfo.NID = req.body.Nid;
+    studentInfo.Name = req.body.Name;
+    studentInfo.phoneNumber = req.body.phoneNumber;
+    studentInfo.department = req.body.department;
+    studentInfo.dateOfBirth = req.body.dateOfBirth;
+
+    const result = await StudentModel.create(studentInfo);
+    if(result){
+        res.status(201).send("Student Registered successfully");
+    }else{
+        res.status(500).send("Student was not added");
+    }
+};
+export const deleteStudent = async (req: Request, res: Response) => {
+    try {
+        const studentId = req.params.id;
+        const result = await StudentModel.delete(studentId);
+        // console.log(result);
+        if(result === true){
+            res.status(200).send("Student info was deleted");
+        }else{
+            // error occured
+            res.status(404).send("Student info does not exist");
+        }
+    } catch (error) {
+        res.status(500);
+    }
+}
