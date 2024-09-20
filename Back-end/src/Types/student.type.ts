@@ -4,5 +4,5 @@ export type student = {
     Name: string,
     phoneNumber: string,
     dateOfBirth: string,
-    department_id: number
+    department: string
 };
