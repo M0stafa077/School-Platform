@@ -1,4 +1,4 @@
-import { QueryError, QueryResult } from 'mysql2';
+import { QueryError, QueryResult } from 'mysql2/promise';
 import { dbConnection } from '../database/database';
 import { student } from '../Types/student.type';
 
@@ -8,8 +8,8 @@ export class StudentModel
     {
         return new Promise(async (resolve, reject) => {
             const sqlGetStudents = `select * from student`;
-            await dbConnection.connect();
-            dbConnection.query(sqlGetStudents, (err: QueryError | any, res: Array<student>) => {
+            await (await dbConnection).connect();
+            await (await dbConnection).query(sqlGetStudents, (err: QueryError | any, res: Array<student>) => {
                 if(err){
                     reject(err);
                 }
@@ -26,8 +26,8 @@ export class StudentModel
             values ('${studentInfo.id}', '${studentInfo.NID}', '${studentInfo.Name}', \
             '${studentInfo.phoneNumber}', '${studentInfo.dateOfBirth}', '${studentInfo.department}');`;
             try{
-                await dbConnection.connect();
-                dbConnection.query(sqlCreateStudent, (err, _res) => {
+                await (await dbConnection).connect();
+                await (await dbConnection).query(sqlCreateStudent, (err:QueryError, _res:QueryResult) => {
                     if(err){
                         reject(err);
                     }
@@ -43,9 +43,9 @@ export class StudentModel
     static async delete(studentId: string): Promise<boolean|Error>{
         return new Promise(async (resolve, reject) => {
             const deleteQuery = `delete from student where id=${studentId}`;
-            await dbConnection.connect();
+            await (await dbConnection).connect();
             try{
-                dbConnection.query(deleteQuery, (err, _res:QueryResult|any) => {
+                await (await dbConnection).query(deleteQuery, (err:QueryError, _res:QueryResult|any) => {
                     if (err){
                         reject(err);
                     }
@@ -67,14 +67,20 @@ export class StudentModel
         {
             return new Promise(async (resolve, reject) => {
                 const getQueury = `select * from student where id=${id}`;
-                await dbConnection.connect();
-                dbConnection.query(getQueury, (err: QueryError | any, res: student[]) => {
-                    if(err){
-                        reject(err);
-                    }   
-                    dbConnection.end();
-                    resolve(res);
-                })
+                try{
+                    await (await dbConnection).connect();
+                    await (await dbConnection).query(getQueury, (err: QueryError | any, res: student[]) => {
+                        if(err){
+                            reject(err);
+                        }   
+                        // dbConnection.end();
+                        resolve(res);
+                    })
+                }
+                catch(error){
+                    console.log("error connecting the the db");
+                    reject(error);
+                }
             });
         } catch(err){
             console.log('Error in student model getting a student by an id');            
