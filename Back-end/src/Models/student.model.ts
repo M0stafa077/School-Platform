@@ -4,18 +4,21 @@ import { student } from '../Types/student.type';
 
 export class StudentModel
 {
-    static async getAll(): Promise<Error | student[]>
+    static async getAll(): Promise<Error | student[]| any>
     {
         return new Promise(async (resolve, reject) => {
             const sqlGetStudents = `select * from student`;
             await (await dbConnection).connect();
-            await (await dbConnection).query(sqlGetStudents, (err: QueryError | any, res: Array<student>) => {
-                if(err){
+            // const students = await (await dbConnection).query(sqlGetStudents);
+            // resolve(students[0]);
+            (await dbConnection).query(sqlGetStudents)
+                .then(result => {
+                    // console.log(result);
+                    resolve(result[0]);
+                })
+                .catch(err => {
                     reject(err);
-                }
-                // dbConnection.end();
-                resolve(res);
-            });
+                })
         });
     }
     static async create(studentInfo: student): Promise<boolean|Error>
@@ -23,38 +26,50 @@ export class StudentModel
         return new Promise(async (resolve, reject) => {
             const sqlCreateStudent = `insert into student (id, Nid, name, phone_number, dateOfBirth, 
             department_symbol)\
-            values ('${studentInfo.id}', '${studentInfo.NID}', '${studentInfo.Name}', \
-            '${studentInfo.phoneNumber}', '${studentInfo.dateOfBirth}', '${studentInfo.department}');`;
+            values (?, ?, ?, ?, ?, ?);`;
+            await (await dbConnection).connect();
             try{
-                await (await dbConnection).connect();
-                await (await dbConnection).query(sqlCreateStudent, (err:QueryError, _res:QueryResult) => {
-                    if(err){
-                        reject(err);
-                    }
-                    // dbConnection.end();
-                    resolve(true);
-                });
+                (await dbConnection).query(sqlCreateStudent, [
+                    studentInfo.id,
+                    studentInfo.NID,
+                    studentInfo.Name,
+                    studentInfo.phoneNumber,
+                    studentInfo.dateOfBirth,
+                    studentInfo.department
+                ])
+                    .then(result => {
+                        resolve(true);                        
+                    })
+                    .catch(error => {
+                        // console.log(error.code);
+                        if(error.code == 'ER_DUP_ENTRY')
+                            reject(false);
+                        else
+                            reject(error);
+                    });
             }catch(err){
-                console.log("Error creating a new student record");                
+                console.log("Error creating a new student record");
                 reject(err);
             }
         });
     }
     static async delete(studentId: string): Promise<boolean|Error>{
         return new Promise(async (resolve, reject) => {
-            const deleteQuery = `delete from student where id=${studentId}`;
+            const deleteQuery = `delete from student where id=?`;
             await (await dbConnection).connect();
             try{
-                await (await dbConnection).query(deleteQuery, (err:QueryError, _res:QueryResult|any) => {
-                    if (err){
-                        reject(err);
-                    }
-                    // console.log(_res);
-                    if(_res.affectedRows == 0){
-                        resolve(false);
-                    }
-                    resolve(true);
-                });
+                (await dbConnection).query(deleteQuery, [studentId])
+                    .then((result: QueryResult|any) => {
+                        // console.log(result);
+                        if(result[0].affectedRows == 0)
+                            resolve(false);
+                        else
+                            resolve(true);
+                    })
+                    .catch(error => {
+                        console.log(error.code);
+                        reject(error);
+                    })
             }catch(err){
                 console.log('Error deleting a student record\n' + err);
                 reject(err);
@@ -66,16 +81,16 @@ export class StudentModel
         try
         {
             return new Promise(async (resolve, reject) => {
-                const getQueury = `select * from student where id=${id}`;
+                const getQueury = `select * from student where id=?`;
                 try{
                     await (await dbConnection).connect();
-                    await (await dbConnection).query(getQueury, (err: QueryError | any, res: student[]) => {
-                        if(err){
+                    (await dbConnection).query(getQueury, [id])
+                        .then(result => {
+                            resolve(result[0]);
+                        })
+                        .catch(err => {
                             reject(err);
-                        }   
-                        // dbConnection.end();
-                        resolve(res);
-                    })
+                        });
                 }
                 catch(error){
                     console.log("error connecting the the db");
@@ -85,5 +100,10 @@ export class StudentModel
         } catch(err){
             console.log('Error in student model getting a student by an id');            
         }
+    }
+    static async updateInfo(studentInfo: student): Promise<boolean|Error>{
+        return new Promise(async (resolve, reject) => {
+            const updateQuery = `update student set id = ?`
+        })
     }
 }
