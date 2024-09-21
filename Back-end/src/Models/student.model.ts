@@ -101,9 +101,36 @@ export class StudentModel
             console.log('Error in student model getting a student by an id');            
         }
     }
-    static async updateInfo(studentInfo: student): Promise<boolean|Error>{
+    static async updateInfo(studentInfo: student|any): Promise<boolean|Error>{
         return new Promise(async (resolve, reject) => {
-            const updateQuery = `update student set id = ?`
+            const updateQuery = `update student set id=?, Nid=?, name=?, phone_number=?, dateOfBirth=? \
+            , department_symbol=? where id=?;`;
+            try{
+                await (await dbConnection).connect();
+            }
+            catch(err){
+                console.log("Error connecting the db");
+                reject(err);
+            }
+            (await dbConnection).query(updateQuery, 
+                [studentInfo.id,
+                studentInfo.NID,
+                studentInfo.Name,
+                studentInfo.phoneNumber,
+                studentInfo.dateOfBirth,
+                studentInfo.department,
+                studentInfo.oldId
+                ])
+                    .then((result: QueryResult|any) => {
+                        if(result[0].affectedRows == 0)
+                            resolve(false);
+                        else
+                            resolve(true);
+                    })
+                    .catch(err => {
+                        // console.log(err);
+                        resolve(err);
+                    });
         })
     }
 }

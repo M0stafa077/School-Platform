@@ -96,7 +96,32 @@ class StudentModel {
     }
     static async updateInfo(studentInfo) {
         return new Promise(async (resolve, reject) => {
-            const updateQuery = `update student set id = ?`;
+            const updateQuery = `update student set id=?, Nid=?, name=?, phone_number=?, dateOfBirth=? \
+            , department_symbol=? where id=?;`;
+            try {
+                await (await database_1.dbConnection).connect();
+            }
+            catch (err) {
+                console.log("Error connecting the db");
+                reject(err);
+            }
+            (await database_1.dbConnection).query(updateQuery, [studentInfo.id,
+                studentInfo.NID,
+                studentInfo.Name,
+                studentInfo.phoneNumber,
+                studentInfo.dateOfBirth,
+                studentInfo.department,
+                studentInfo.oldId
+            ])
+                .then((result) => {
+                if (result[0].affectedRows == 0)
+                    resolve(false);
+                else
+                    resolve(true);
+            })
+                .catch(err => {
+                resolve(err);
+            });
         });
     }
 }
