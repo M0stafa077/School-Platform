@@ -26,8 +26,8 @@ export const getStudentById = async(req: Request, res: Response) => {
     }
 };
 export const updateStudentInfo = async(req: Request, res: Response) => {
-    let studentInfo: student = {} as student;
-    // console.log(req.body);
+    let studentInfo = {} as student|any;
+    studentInfo.oldId = req.params.id;
     studentInfo.id = req.body.id;
     studentInfo.NID = req.body.Nid;
     studentInfo.Name = req.body.Name;
@@ -38,7 +38,10 @@ export const updateStudentInfo = async(req: Request, res: Response) => {
     const result = await StudentModel.updateInfo(studentInfo);
     if(result === true){
         res.status(200).send("Student info is updated successfully");
-    } 
+    }
+    else if(result === false){
+        res.status(404).send("No student with this id");
+    }
     else{
         res.status(500).send("Student info was not updated");
     }
