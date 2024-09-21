@@ -12,7 +12,7 @@ studentRoutes.route('/create')
 studentRoutes.route('/:id') 
     .get(controllers.getStudentById)
     .delete(controllers.deleteStudent)
-    .patch(controllers.updateStudentInfo);
+    .put(controllers.updateStudentInfo);
 
 studentRoutes.get('/delete-student', (req: Request, res: Response)=> {
     res.json({ message: "Delete a student" });
