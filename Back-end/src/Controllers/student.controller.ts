@@ -26,14 +26,8 @@ export const getStudentById = async(req: Request, res: Response) => {
     }
 };
 export const updateStudentInfo = async(req: Request, res: Response) => {
-
-};
-export const getCreateView = (req: Request, res: Response) => {
-    res.send('Create a new student');
-}
-export const createNewStudent = async(req: Request, res: Response) => {
     let studentInfo: student = {} as student;
-    console.log(req.body);
+    // console.log(req.body);
     studentInfo.id = req.body.id;
     studentInfo.NID = req.body.Nid;
     studentInfo.Name = req.body.Name;
@@ -41,12 +35,39 @@ export const createNewStudent = async(req: Request, res: Response) => {
     studentInfo.department = req.body.department;
     studentInfo.dateOfBirth = req.body.dateOfBirth;
 
-    const result = await StudentModel.create(studentInfo);
-    if(result){
-        res.status(201).send("Student Registered successfully");
-    }else{
-        res.status(500).send("Student was not added");
+    const result = await StudentModel.updateInfo(studentInfo);
+    if(result === true){
+        res.status(200).send("Student info is updated successfully");
+    } 
+    else{
+        res.status(500).send("Student info was not updated");
     }
+};
+export const getCreateView = (req: Request, res: Response) => {
+    res.send('Create a new student');
+}
+export const createNewStudent = async(req: Request, res: Response) => {
+    let studentInfo: student = {} as student;
+    // console.log(req.body);
+    studentInfo.id = req.body.id;
+    studentInfo.NID = req.body.Nid;
+    studentInfo.Name = req.body.Name;
+    studentInfo.phoneNumber = req.body.phoneNumber;
+    studentInfo.department = req.body.department;
+    studentInfo.dateOfBirth = req.body.dateOfBirth;
+
+    StudentModel.create(studentInfo)
+        .then(result => {
+            res.status(201).send("Student Registered successfully");
+        })
+        .catch(error => {
+            if(error === false){
+                res.status(409).send("Student already exists");
+            }
+            else{
+                res.status(500).send("Error adding the student info, try again later");
+            }
+        });
 };
 export const deleteStudent = async (req: Request, res: Response) => {
     try {
@@ -55,9 +76,10 @@ export const deleteStudent = async (req: Request, res: Response) => {
         // console.log(result);
         if(result === true){
             res.status(200).send("Student info was deleted");
-        }else{
-            // error occured
+        }else if(result === false){
             res.status(404).send("Student info does not exist");
+        }else{
+            res.status(500).send("Error deleting the student info, try again later!");// error occured
         }
     } catch (error) {
         res.status(500);

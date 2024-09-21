@@ -29,28 +29,46 @@ const getStudentById = async (req, res) => {
 };
 exports.getStudentById = getStudentById;
 const updateStudentInfo = async (req, res) => {
-};
-exports.updateStudentInfo = updateStudentInfo;
-const getCreateView = (req, res) => {
-    res.status(200).send('Create a new student');
-};
-exports.getCreateView = getCreateView;
-const createNewStudent = async (req, res) => {
     let studentInfo = {};
-    console.log(req.body);
     studentInfo.id = req.body.id;
     studentInfo.NID = req.body.Nid;
     studentInfo.Name = req.body.Name;
     studentInfo.phoneNumber = req.body.phoneNumber;
     studentInfo.department = req.body.department;
     studentInfo.dateOfBirth = req.body.dateOfBirth;
-    const result = await student_model_1.StudentModel.create(studentInfo);
-    if (result) {
-        res.status(201).send("Student Registered successfully");
+    const result = await student_model_1.StudentModel.updateInfo(studentInfo);
+    if (result === true) {
+        res.status(200).send("Student info is updated successfully");
     }
     else {
-        res.status(500).send("Student was not added");
+        res.status(500).send("Student info was not updated");
     }
+};
+exports.updateStudentInfo = updateStudentInfo;
+const getCreateView = (req, res) => {
+    res.send('Create a new student');
+};
+exports.getCreateView = getCreateView;
+const createNewStudent = async (req, res) => {
+    let studentInfo = {};
+    studentInfo.id = req.body.id;
+    studentInfo.NID = req.body.Nid;
+    studentInfo.Name = req.body.Name;
+    studentInfo.phoneNumber = req.body.phoneNumber;
+    studentInfo.department = req.body.department;
+    studentInfo.dateOfBirth = req.body.dateOfBirth;
+    student_model_1.StudentModel.create(studentInfo)
+        .then(result => {
+        res.status(201).send("Student Registered successfully");
+    })
+        .catch(error => {
+        if (error === false) {
+            res.status(409).send("Student already exists");
+        }
+        else {
+            res.status(500).send("Error adding the student info, try again later");
+        }
+    });
 };
 exports.createNewStudent = createNewStudent;
 const deleteStudent = async (req, res) => {
@@ -60,8 +78,11 @@ const deleteStudent = async (req, res) => {
         if (result === true) {
             res.status(200).send("Student info was deleted");
         }
-        else {
+        else if (result === false) {
             res.status(404).send("Student info does not exist");
+        }
+        else {
+            res.status(500).send("Error deleting the student info, try again later!");
         }
     }
     catch (error) {
