@@ -12,8 +12,5 @@ studentRoutes.route('/:id')
     .delete(controllers.deleteStudent)
     .put(controllers.updateStudentInfo);
 
-studentRoutes.get('/delete-student', (req: Request, res: Response)=> {
-    res.json({ message: "Delete a student" });
-});    // View
 
 export default studentRoutes;
