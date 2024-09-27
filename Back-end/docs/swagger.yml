@@ -1,0 +1,155 @@
+openapi: 3.0.0
+info:
+  title: School platform simple API.
+  description: A simple API for a school platform provides some CRUD operations, registering and 
+    signing-in for students and teachers.
+  version: 1.0.0
+servers: 
+  - url: http://localhost:4000/
+
+paths:
+  /students:
+    get:
+      operationId: getStudents
+      tags:
+        - Students CRUD Operations
+      summary: Get all students.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+        "204":
+          description: No students exist in the database
+        "500": 
+          description: Internal server error
+
+    post:
+      tags:
+        - Students CRUD Operations
+      operationId: createStudent
+      summary: Add new student
+      parameters:
+        - in: body
+          name: body
+          description: The student to add to the database
+          required: true
+          schema:
+            $ref: "#/components/schemas/Student"
+      responses:
+        "201":
+          description: Successfully Added new student
+        "409":
+          description: Student already exists
+        "500":
+          description: Internal server error
+
+    put:
+      tags:
+        - Students CRUD Operations
+      operationId: updateStudent
+      summary: Update a student information
+      parameters:
+        - in: body
+          name: body
+          description: The student to be updated in the database
+          required: true
+          schema:
+            $ref: "#/components/schemas/Student"
+      responses:
+        "200":
+          description: Successfully updated the student information
+        "404":
+          description: No student with this information
+        "500":
+          description: Internal server error
+
+  /students/{id}:
+    get:
+      summary: Get student by id
+      operationId: getStudentById
+      tags: 
+        - Students CRUD Operations
+      parameters:
+        - in: path
+          name: Id
+          schema:
+            type: string
+          required: true
+          description: 14-digit student id
+      responses:
+        "200": 
+          description: OK
+        "404": 
+          description: No student with that id
+    
+
+    put:
+      tags:
+        - Students CRUD Operations
+      operationId: updateStudent
+      summary: Update a student information
+      parameters:
+        - in: path
+          name: old_id
+          schema:
+            type: string
+          required: true
+          description: 14-digit student id
+        - in: body
+          name: body
+          description: The student to be updated in the database
+          required: true
+          schema:
+            $ref: "#/components/schemas/Student"
+      responses:
+        "200":
+          description: Successfully updated the student information
+        "404":
+          description: No student with this information
+        "500":
+          description: Internal server error
+
+    delete:
+      tags:
+        - Students CRUD Operations
+      operationId: deleteStudent
+      summary: Delete a student by id
+
+      parameters:
+        - in: path
+          name: Id
+          schema:
+            type: string
+          required: true
+          description: 14-digit student id
+
+      responses:
+        "200":
+          description: Successfully deleted
+        "404":
+          description: Student info does not exist
+        "500":
+          description: Internal server error
+
+components:
+  schemas:
+    Student:
+      type: object
+      properties:
+        id:
+          type: string
+        Nid:
+          type: string
+        Name:
+          type: string
+        phoneNumber:
+          type: string
+        dateOfBirth:
+          type: string
+        department: 
+          type: string
