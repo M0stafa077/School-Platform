@@ -5,7 +5,15 @@ import { StudentModel } from "../Models/student.model";
 export const getAllStudent = async (req: Request, res: Response) => {
     try{
         let students: student[] | Error = await StudentModel.getAll();
-        res.json(students);
+        if(students instanceof Error){
+            res.status(500).send("Internal server error");
+        }
+        else if(Array(students).length === 0){
+            res.status(204).send("There's no student data");
+        }
+        else{
+            res.json(students);
+        }
     }
     catch(err){
         console.log('Error retrieving all students');
