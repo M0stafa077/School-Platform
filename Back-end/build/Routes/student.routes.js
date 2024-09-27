@@ -26,15 +26,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const controllers = __importStar(require("../Controllers/student.controller"));
 const studentRoutes = (0, express_1.Router)();
-studentRoutes.get('/', controllers.getAllStudent);
-studentRoutes.route('/create')
-    .get(controllers.getCreateView)
+studentRoutes.route('/')
+    .get(controllers.getAllStudent)
     .post(controllers.createNewStudent);
 studentRoutes.route('/:id')
     .get(controllers.getStudentById)
-    .patch(controllers.updateStudentInfo);
-studentRoutes.get('/delete-student', (req, res) => {
-    res.json({ message: "Delete a student" });
-});
-studentRoutes.delete('/delete-student/:id', controllers.deleteStudent);
+    .delete(controllers.deleteStudent)
+    .put(controllers.updateStudentInfo);
 exports.default = studentRoutes;

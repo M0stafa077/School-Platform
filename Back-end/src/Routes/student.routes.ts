@@ -5,7 +5,8 @@ const studentRoutes = Router();
 
 studentRoutes.route('/')
     .get(controllers.getAllStudent)
-    .post(controllers.createNewStudent);
+    .post(controllers.createNewStudent)
+    .put(controllers.updateStudentInfoBody);
 
 studentRoutes.route('/:id') 
     .get(controllers.getStudentById)
