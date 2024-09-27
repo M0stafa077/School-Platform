@@ -3,10 +3,8 @@ import * as controllers from '../Controllers/student.controller'
 
 const studentRoutes = Router();
 
-studentRoutes.get('/', controllers.getAllStudent);
-
-studentRoutes.route('/create')
-    .get(controllers.getCreateView)
+studentRoutes.route('/')
+    .get(controllers.getAllStudent)
     .post(controllers.createNewStudent);
 
 studentRoutes.route('/:id') 
