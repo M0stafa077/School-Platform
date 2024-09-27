@@ -46,9 +46,6 @@ export const updateStudentInfo = async(req: Request, res: Response) => {
         res.status(500).send("Student info was not updated");
     }
 };
-export const getCreateView = (req: Request, res: Response) => {
-    res.send('Create a new student');
-}
 export const createNewStudent = async(req: Request, res: Response) => {
     let studentInfo: student = {} as student;
     // console.log(req.body);
