@@ -54,6 +54,27 @@ export const updateStudentInfo = async(req: Request, res: Response) => {
         res.status(500).send("Student info was not updated");
     }
 };
+export const updateStudentInfoBody = async(req: Request, res: Response) => {
+    let studentInfo = {} as student|any;
+    studentInfo.id = req.body.id;
+    studentInfo.oldId = studentInfo.id;
+    studentInfo.NID = req.body.Nid;
+    studentInfo.Name = req.body.Name;
+    studentInfo.phoneNumber = req.body.phoneNumber;
+    studentInfo.department = req.body.department;
+    studentInfo.dateOfBirth = req.body.dateOfBirth;
+
+    const result = await StudentModel.updateInfo(studentInfo);
+    if(result === true){
+        res.status(200).send("Student info is updated successfully");
+    }
+    else if(result === false){
+        res.status(404).send("No student with this id");
+    }
+    else{
+        res.status(500).send("Student info was not updated");
+    }
+};
 export const createNewStudent = async(req: Request, res: Response) => {
     let studentInfo: student = {} as student;
     // console.log(req.body);

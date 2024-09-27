@@ -1,11 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteStudent = exports.createNewStudent = exports.getCreateView = exports.updateStudentInfo = exports.getStudentById = exports.getAllStudent = void 0;
+exports.deleteStudent = exports.createNewStudent = exports.updateStudentInfo = exports.getStudentById = exports.getAllStudent = void 0;
 const student_model_1 = require("../Models/student.model");
 const getAllStudent = async (req, res) => {
     try {
         let students = await student_model_1.StudentModel.getAll();
-        res.json(students);
+        if (students instanceof Error) {
+            res.status(500).send("Internal server error");
+        }
+        else if (Array(students).length === 0) {
+            res.status(204).send("There's no student data");
+        }
+        else {
+            res.json(students);
+        }
     }
     catch (err) {
         console.log('Error retrieving all students');
@@ -49,10 +57,6 @@ const updateStudentInfo = async (req, res) => {
     }
 };
 exports.updateStudentInfo = updateStudentInfo;
-const getCreateView = (req, res) => {
-    res.send('Create a new student');
-};
-exports.getCreateView = getCreateView;
 const createNewStudent = async (req, res) => {
     let studentInfo = {};
     studentInfo.id = req.body.id;
