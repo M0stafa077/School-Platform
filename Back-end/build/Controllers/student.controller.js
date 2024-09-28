@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteStudent = exports.createNewStudent = exports.updateStudentInfo = exports.getStudentById = exports.getAllStudent = void 0;
+exports.deleteStudent = exports.createNewStudent = exports.updateStudentInfoBody = exports.updateStudentInfo = exports.getStudentById = exports.getAllStudent = void 0;
 const student_model_1 = require("../Models/student.model");
 const getAllStudent = async (req, res) => {
     try {
@@ -57,6 +57,27 @@ const updateStudentInfo = async (req, res) => {
     }
 };
 exports.updateStudentInfo = updateStudentInfo;
+const updateStudentInfoBody = async (req, res) => {
+    let studentInfo = {};
+    studentInfo.id = req.body.id;
+    studentInfo.oldId = studentInfo.id;
+    studentInfo.NID = req.body.Nid;
+    studentInfo.Name = req.body.Name;
+    studentInfo.phoneNumber = req.body.phoneNumber;
+    studentInfo.department = req.body.department;
+    studentInfo.dateOfBirth = req.body.dateOfBirth;
+    const result = await student_model_1.StudentModel.updateInfo(studentInfo);
+    if (result === true) {
+        res.status(200).send("Student info is updated successfully");
+    }
+    else if (result === false) {
+        res.status(404).send("No student with this id");
+    }
+    else {
+        res.status(500).send("Student info was not updated");
+    }
+};
+exports.updateStudentInfoBody = updateStudentInfoBody;
 const createNewStudent = async (req, res) => {
     let studentInfo = {};
     studentInfo.id = req.body.id;
