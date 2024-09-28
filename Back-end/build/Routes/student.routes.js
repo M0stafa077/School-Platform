@@ -28,7 +28,8 @@ const controllers = __importStar(require("../Controllers/student.controller"));
 const studentRoutes = (0, express_1.Router)();
 studentRoutes.route('/')
     .get(controllers.getAllStudent)
-    .post(controllers.createNewStudent);
+    .post(controllers.createNewStudent)
+    .put(controllers.updateStudentInfoBody);
 studentRoutes.route('/:id')
     .get(controllers.getStudentById)
     .delete(controllers.deleteStudent)
