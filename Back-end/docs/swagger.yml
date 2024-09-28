@@ -135,6 +135,102 @@ paths:
           description: Student info does not exist
         "500":
           description: Internal server error
+  
+  /teachers:
+    get:
+      operationId: getTeachers
+      tags:
+        - Teachers CRUD Operations
+      summary: Get all teachers.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Teacher'
+        "204":
+          description: No teachers exist in the database
+        "500": 
+          description: Internal server error
+    post:
+      tags:
+        - Teachers CRUD Operations
+      operationId: createTeacher
+      summary: Add new Teacher
+      parameters:
+        - in: body
+          name: body
+          description: The Teacher to add to the database
+          required: true
+          schema:
+            $ref: "#/components/schemas/Teacher"
+      responses:
+        "201":
+          description: Successfully Added new Teacher
+        "409":
+          description: Teacher already exists
+        "500":
+          description: Internal server error
+    put:
+      tags:
+        - Teachers CRUD Operations
+      operationId: updateTeacher
+      summary: Update a Teacher information
+      parameters:
+        - in: body
+          name: body
+          description: The Teacher to be updated in the database <br></br>
+            <span style="color:red">*Note:** The `username` field should not be updated.</span>
+          required: true
+          schema:
+            $ref: "#/components/schemas/Teacher"
+      responses:
+        "200":
+          description: Successfully updated the Teacher information
+        "404":
+          description: No Teacher with this information
+        "500":
+          description: Internal server error
+  /teachers/{username}:
+    get:
+      summary: Get teacher by username
+      operationId: getTeacherByUsername
+      tags: 
+        - Teachers CRUD Operations
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+      responses:
+        "200": 
+          description: OK
+        "404": 
+          description: No Teacher with that username
+    delete:
+      tags:
+        - Teachers CRUD Operations
+      operationId: deleteTeacher
+      summary: Delete a Teacher by username
+
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+
+      responses:
+        "200":
+          description: Successfully deleted
+        "404":
+          description: Teacher info does not exist
+        "500":
+          description: Internal server error
 
 components:
   schemas:
@@ -152,4 +248,19 @@ components:
         dateOfBirth:
           type: string
         department: 
+          type: string
+    Teacher:
+      type: object
+      properties:
+        Name: 
+          type: string
+        phoneNumber: 
+          type: string
+        dateOfBirth: 
+          type: string
+        department: 
+          type: string
+        username: 
+          type: string
+        password: 
           type: string
