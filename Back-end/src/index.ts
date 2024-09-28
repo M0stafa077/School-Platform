@@ -1,5 +1,6 @@
 import express, { Application } from 'express';
 import studentRoutes  from './Routes/student.routes'
+import { teacherRoutes } from './Routes/teacher.routes';
 import swaggerUi from 'swagger-ui-express';
 import fs from 'fs';
 import path from 'path';
@@ -23,6 +24,7 @@ app.get('/', async (req, res) => {
     });
 });
 app.use('/students', studentRoutes);
+app.use("/teachers", teacherRoutes);
 
 app.listen(port, () => {
     console.log(`Listening on ${port}`);
