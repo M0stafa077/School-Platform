@@ -16,7 +16,7 @@ const getAllStudent = async (req, res) => {
         }
     }
     catch (err) {
-        console.log('Error retrieving all students');
+        console.log("Error retrieving all students");
         throw err;
     }
 };
@@ -30,9 +30,10 @@ const getStudentById = async (req, res) => {
         res.json(studentInfo[0]);
     }
     catch (err) {
-        console.log('Error retrieving a students by an id');
-        res.status(404)
-            .json({ message: `No Student with ID ${req.params.id}` });
+        console.log("Error retrieving a students by an id");
+        res.status(404).json({
+            message: `No Student with ID ${req.params.id}`,
+        });
     }
 };
 exports.getStudentById = getStudentById;
@@ -87,10 +88,10 @@ const createNewStudent = async (req, res) => {
     studentInfo.department = req.body.department;
     studentInfo.dateOfBirth = req.body.dateOfBirth;
     student_model_1.StudentModel.create(studentInfo)
-        .then(result => {
+        .then((result) => {
         res.status(201).send("Student Registered successfully");
     })
-        .catch(error => {
+        .catch((error) => {
         if (error === false) {
             res.status(409).send("Student already exists");
         }
