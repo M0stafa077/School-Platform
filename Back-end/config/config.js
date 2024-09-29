@@ -6,4 +6,5 @@ export const development = {
   database: process.env.MYSQL_DATABASE,
   host: "127.0.0.1",
   dialect: "mysql",
+  migrationStorageTableName: "migrations",
 };
