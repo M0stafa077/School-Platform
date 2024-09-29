@@ -7,7 +7,9 @@
     "dev": "tsc; nodemon build/index.js",
     "migration:create": "npx sequelize-cli migration:generate",
     "migrate": "npx sequelize-cli db:migrate",
-    "migration:rollback": "npx sequelize-cli db:migrate:undo"
+    "migration:rollback": "npx sequelize-cli db:migrate:undo",
+    "seed:create": "npx sequelize-cli seed:generate --name",
+    "seed:run": "npx sequelize-cli db:seed:all"
   },
   "author": "",
   "license": "ISC",
