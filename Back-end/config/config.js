@@ -1,10 +1,13 @@
 require("dotenv").config();
 
-export const development = {
-  username: process.env.MYSQL_MY_USER,
-  password: process.env.MYSQL_MY_PASSWORD,
-  database: process.env.MYSQL_DATABASE,
-  host: "127.0.0.1",
-  dialect: "mysql",
-  migrationStorageTableName: "migrations",
+module.exports = {
+  development: {
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    host: "172.18.0.2",
+    port: process.env.DB_PORT,
+    dialect: "mysql",
+    migrationStorageTableName: "migrations",
+  },
 };
